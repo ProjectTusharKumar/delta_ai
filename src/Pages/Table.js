@@ -11,7 +11,7 @@ const TableManager = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await api.get('/api/table');
+        const response = await .get('/api/table');
         if (!response.ok) {
           throw new Error('Failed to fetch table names');
         }
@@ -83,7 +83,7 @@ const TableDisplay = ({ selectedTable }) => {
       setLoadingData(true);
       try {
         const response = await fetch(
-          `http://localhost:5000/api/table?name=${encodeURIComponent(selectedTable)}`
+          `https://delta-ai-192s.onrender.com/api/table?name=${encodeURIComponent(selectedTable)}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch data for the selected table');
