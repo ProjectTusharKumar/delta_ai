@@ -1,8 +1,7 @@
 // TableManager.js
 import React, { useEffect, useState } from 'react';
 
-// Replace this with your deployed server's URL.
-const API_BASE_URL = 'https://delta-ai-192s.onrender.com';
+const API_BASE_URL = 'hhttps://delta-ai-192s.onrender.com';
 
 const TableManager = () => {
   const [tables, setTables] = useState([]);
@@ -19,7 +18,7 @@ const TableManager = () => {
           throw new Error('Failed to fetch table names');
         }
         const result = await response.json();
-        // Expecting result.tables to be an array of table names.
+        // API should return { tables: [ ... ] }
         setTables(result.tables);
       } catch (err) {
         setError(err.message);
@@ -36,23 +35,21 @@ const TableManager = () => {
 
   return (
     <div className="p-4">
-      <div className="mb-4">
-        <h2 className="text-xl font-bold mb-2">Select a Table</h2>
-        <div className="flex space-x-2">
-          {tables.map((table, index) => (
-            <button
-              key={index}
-              onClick={() => setSelectedTable(table)}
-              className={`px-10 py-2 rounded ${
-                selectedTable === table
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-800'
-              }`}
-            >
-              {table}
-            </button>
-          ))}
-        </div>
+      <h2 className="text-xl font-bold mb-4">Select a Table</h2>
+      <div className="flex space-x-2 mb-4">
+        {tables.map((table, index) => (
+          <button
+            key={index}
+            onClick={() => setSelectedTable(table)}
+            className={`px-6 py-2 rounded ${
+              selectedTable === table
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 text-gray-800'
+            }`}
+          >
+            {table}
+          </button>
+        ))}
       </div>
       {selectedTable && <TableDisplay selectedTable={selectedTable} />}
     </div>
@@ -65,7 +62,7 @@ const TableDisplay = ({ selectedTable }) => {
   const [error, setError] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
 
-  // Custom column order (adjust as needed)
+  // Define custom column order if needed (adjust these names to match your database columns)
   const customColumns = [
     'id',
     'name',
@@ -80,7 +77,7 @@ const TableDisplay = ({ selectedTable }) => {
     'past projects'
   ];
 
-  // Fetch data for the selected table whenever it changes.
+  // Fetch data for the selected table when it changes.
   useEffect(() => {
     const fetchData = async () => {
       setLoadingData(true);
