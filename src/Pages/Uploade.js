@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import Button from "../Components/Button";
 import Card from "../Components/Card";
 import Input from "../Components/Input";
 import CardContent from "../Components/CardContent";
+import api from '../api'
 
 export default function UploadExcel() {
     const [file, setFile] = useState(null);
@@ -25,7 +26,7 @@ export default function UploadExcel() {
         formData.append("table_name", tableName);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/upload", formData);
+            const response = await api.post("/api/upload", formData);
             setMessage(response.data.success || response.data.error);
         } catch (error) {
             setMessage(`Error: ${error.response?.data.error || error.message}`);
