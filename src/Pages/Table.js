@@ -1,5 +1,8 @@
+// TableManager.js
 import React, { useEffect, useState } from 'react';
-import api from '../api'
+
+// Replace this with your deployed server's URL.
+const API_BASE_URL = 'https://delta-ai-192s.onrender.com';
 
 const TableManager = () => {
   const [tables, setTables] = useState([]);
@@ -11,12 +14,12 @@ const TableManager = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await api.get('/api/table');
+        const response = await fetch(`${API_BASE_URL}/api/table`);
         if (!response.ok) {
           throw new Error('Failed to fetch table names');
         }
         const result = await response.json();
-        // Assume the API returns an array of table names in result.tables
+        // Expecting result.tables to be an array of table names.
         setTables(result.tables);
       } catch (err) {
         setError(err.message);
@@ -62,7 +65,7 @@ const TableDisplay = ({ selectedTable }) => {
   const [error, setError] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
 
-  // Custom column order as provided.
+  // Custom column order (adjust as needed)
   const customColumns = [
     'id',
     'name',
@@ -77,13 +80,13 @@ const TableDisplay = ({ selectedTable }) => {
     'past projects'
   ];
 
-  // Fetch data whenever the selected table changes.
+  // Fetch data for the selected table whenever it changes.
   useEffect(() => {
     const fetchData = async () => {
       setLoadingData(true);
       try {
         const response = await fetch(
-          `https://delta-ai-192s.onrender.com/api/table?name=${encodeURIComponent(selectedTable)}`
+          `${API_BASE_URL}/api/table?name=${encodeURIComponent(selectedTable)}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch data for the selected table');
