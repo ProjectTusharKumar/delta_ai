@@ -1,7 +1,7 @@
 // TableManager.js
 import React, { useEffect, useState } from 'react';
 
-const API_BASE_URL = 'hhttps://delta-ai-192s.onrender.com';
+const API_BASE_URL = 'https://delta-ai-192s.onrender.com';
 
 const TableManager = () => {
   const [tables, setTables] = useState([]);
