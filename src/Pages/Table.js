@@ -13,7 +13,7 @@ const TableManager = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/table`);
+        const response = await fetch(`${API_BASE_URL}/api/tables`);
         if (!response.ok) {
           throw new Error('Failed to fetch table names');
         }
@@ -83,7 +83,7 @@ const TableDisplay = ({ selectedTable }) => {
       setLoadingData(true);
       try {
         const response = await fetch(
-          `${API_BASE_URL}/api/table?name=${encodeURIComponent(selectedTable)}`
+          `${API_BASE_URL}/api/tables?name=${encodeURIComponent(selectedTable)}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch data for the selected table');
