@@ -1,4 +1,3 @@
-// TableManager.js
 import React, { useEffect, useState } from 'react';
 
 const API_BASE_URL = 'https://delta-ai-backend.onrender.com';
@@ -9,7 +8,7 @@ const TableManager = () => {
   const [error, setError] = useState(null);
   const [loadingTables, setLoadingTables] = useState(true);
 
-  // REM: Fetch the list of table names when the component mounts.
+  // Fetch the list of table names when the component mounts.
   useEffect(() => {
     const fetchTables = async () => {
       try {
@@ -18,8 +17,10 @@ const TableManager = () => {
           throw new Error('Failed to fetch table names');
         }
         const result = await response.json();
-        // REM: Expecting API to return { tables: [ ... ] }
         setTables(result.tables);
+        if (result.tables.length > 0) {
+          setSelectedTable(result.tables[0]);
+        }
       } catch (err) {
         setError(err.message);
       } finally {
@@ -35,22 +36,21 @@ const TableManager = () => {
 
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Select a Table</h2>
-      <div className="flex space-x-2 mb-4">
+      <label htmlFor="tableSelect" >
+       <div className="block mb-2 p-4 font-bold text-3xl"> Select a Table </div>
+      </label>
+      <select
+        id="tableSelect"
+        className="mb-4 p-2 border rounded"
+        value={selectedTable}
+        onChange={(e) => setSelectedTable(e.target.value)}
+      >
         {tables.map((table, index) => (
-          <button
-            key={index}
-            onClick={() => setSelectedTable(table)}
-            className={`px-6 py-2 rounded ${
-              selectedTable === table
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-800'
-            }`}
-          >
+          <option key={index} value={table}>
             {table}
-          </button>
+          </option>
         ))}
-      </div>
+      </select>
       {selectedTable && <TableDisplay selectedTable={selectedTable} />}
     </div>
   );
@@ -62,7 +62,7 @@ const TableDisplay = ({ selectedTable }) => {
   const [error, setError] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
 
-  // REM: Define custom column order (adjust these names as per your database columns)
+  // Define custom column order (adjust these names as per your database columns)
   const customColumns = [
     'Name',
     'DOB',
@@ -76,31 +76,39 @@ const TableDisplay = ({ selectedTable }) => {
     'Past Projects'
   ];
 
-  // REM: Fetch data for the selected table when it changes.
+  // Fetch data for the selected table when it changes.
   useEffect(() => {
-  const fetchData = async () => {
-    setLoadingData(true);
-    try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/table?name=${encodeURIComponent(selectedTable)}`
-      );
-      if (!response.ok) {
-        throw new Error('Failed to fetch data for the selected table');
+    const fetchData = async () => {
+      setLoadingData(true);
+      try {
+        const response = await fetch(
+          `${API_BASE_URL}/api/table?name=${encodeURIComponent(selectedTable)}`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch data for the selected table');
+        }
+        const result = await response.json();
+        console.log("API result:", result); // Debug log
+
+        // Normalize keys to lowercase for consistent lookup
+        const normalizedData = result.data.map(row =>
+          Object.keys(row).reduce((acc, key) => {
+            acc[key.toLowerCase()] = row[key];
+            return acc;
+          }, {})
+        );
+
+        setData(normalizedData);
+        setTableName(result.table_name);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoadingData(false);
       }
-      const result = await response.json();
-      console.log("API result:", result); // Debug log
-      setData(result.data);
-      setTableName(result.table_name);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoadingData(false);
-    }
-  };
+    };
 
-  fetchData();
-}, [selectedTable]);
-
+    fetchData();
+  }, [selectedTable]);
 
   if (error) return <div className="text-red-500">Error: {error}</div>;
   if (loadingData) return <div className="text-blue-500">Loading data...</div>;
@@ -124,7 +132,7 @@ const TableDisplay = ({ selectedTable }) => {
               <tr key={rowIndex} className="hover:bg-gray-50">
                 {customColumns.map((col, colIndex) => (
                   <td key={colIndex} className="border px-4 py-2">
-                    {row[col] !== undefined ? row[col] : ''}
+                    {row[col.toLowerCase()] || ''}
                   </td>
                 ))}
               </tr>

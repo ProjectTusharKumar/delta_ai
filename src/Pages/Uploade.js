@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-// import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Button from "../Components/Button";
 import Card from "../Components/Card";
 import Input from "../Components/Input";
 import CardContent from "../Components/CardContent";
-import api from '../api'
+import api from '../api';
 
 export default function UploadExcel() {
     const [file, setFile] = useState(null);
     const [tableName, setTableName] = useState("");
-    const [message, setMessage] = useState("");
+    const [uploadMessage, setUploadMessage] = useState("");
 
     const handleFileChange = (e) => setFile(e.target.files[0]);
     const handleTableNameChange = (e) => setTableName(e.target.value);
@@ -17,7 +18,8 @@ export default function UploadExcel() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file || !tableName) {
-            setMessage("Please provide both a file and table name.");
+            toast.error("Please provide both a file and table name.");
+            setUploadMessage("Please provide both a file and table name.");
             return;
         }
 
@@ -27,9 +29,19 @@ export default function UploadExcel() {
 
         try {
             const response = await api.post("/api/upload", formData);
-            setMessage(response.data.success || response.data.error);
+            console.log("Upload response:", response.data); // Debug log
+            // If response status is 200, consider it a success.
+            if (response.status === 200) {
+                toast.success("File is uploaded successfully");
+                setUploadMessage("File is uploaded successfully");
+            } else {
+                toast.error("File did not upload");
+                setUploadMessage("File did not upload");
+            }
         } catch (error) {
-            setMessage(`Error: ${error.response?.data.error || error.message}`);
+            console.error("Upload error:", error);
+            toast.error("File did not upload");
+            setUploadMessage("File did not upload");
         }
     };
 
@@ -48,7 +60,9 @@ export default function UploadExcel() {
                     />
                     <Button type="submit">Upload</Button>
                 </form>
-                {message && <p className="mt-4 text-center">{message}</p>}
+                {uploadMessage && (
+                    <p className="mt-4 text-center font-bold">{uploadMessage}</p>
+                )}
             </CardContent>
         </Card>
     );

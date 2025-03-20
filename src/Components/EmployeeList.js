@@ -21,12 +21,11 @@ const EditableTable = () => {
   const [editingRow, setEditingRow] = useState(null);
   const [editData, setEditData] = useState({});
 
-  // Fixed columns definition
+  // Fixed columns definition (keys should be in lowercase)
   const fixedColumns = [
-    { header: 'id', key: 'id' },
     { header: 'name', key: 'name' },
     { header: 'dob', key: 'dob' },
-    { header: 'Phone No', key: 'Phone No' },
+    { header: 'Phone No', key: 'phone no' },
     { header: 'skills', key: 'skills' },
     { header: 'doj', key: 'doj' },
     { header: 'salary', key: 'salary' },
@@ -64,7 +63,14 @@ const EditableTable = () => {
     setLoading(true);
     try {
       const response = await api.get(`/api/table_data?name=${selectedTable}`);
-      setData(response.data.data);
+      // Normalize keys to lowercase for consistent lookup
+      const normalizedData = response.data.data.map(row =>
+        Object.keys(row).reduce((acc, key) => {
+          acc[key.toLowerCase()] = row[key];
+          return acc;
+        }, {})
+      );
+      setData(normalizedData);
     } catch (error) {
       toast.error('Failed to fetch table data');
     } finally {

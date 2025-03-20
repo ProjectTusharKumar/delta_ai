@@ -1,5 +1,8 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Layout from './Components/Layout';
 import Dashboard from './Pages/Dashboard';
 import Table from './Pages/Table';
@@ -8,7 +11,6 @@ import Chat from './Pages/Chat';
 import EmployeeList from './Components/EmployeeList';
 // import UploadEmployee from './Components/UploadEmployee';
 // import EditEmployee from './Components/EditEmployee';
-
 
 const App = () => {
   return (
@@ -22,6 +24,7 @@ const App = () => {
         {/* <Route path="/upload" element={<UploadEmployee />} />
         <Route path="/edit/:id" element={<EditEmployee />} /> */}
       </Routes>
+      {/* <ToastContainer /> */}
     </Layout>
   );
 };
