@@ -9,7 +9,7 @@ const TableManager = () => {
   const [error, setError] = useState(null);
   const [loadingTables, setLoadingTables] = useState(true);
 
-  // Fetch the list of table names when the component mounts.
+  // REM: Fetch the list of table names when the component mounts.
   useEffect(() => {
     const fetchTables = async () => {
       try {
@@ -18,7 +18,7 @@ const TableManager = () => {
           throw new Error('Failed to fetch table names');
         }
         const result = await response.json();
-        // API should return { tables: [ ... ] }
+        // REM: Expecting API to return { tables: [ ... ] }
         setTables(result.tables);
       } catch (err) {
         setError(err.message);
@@ -62,7 +62,7 @@ const TableDisplay = ({ selectedTable }) => {
   const [error, setError] = useState(null);
   const [loadingData, setLoadingData] = useState(true);
 
-  // Define custom column order if needed (adjust these names to match your database columns)
+  // REM: Define custom column order (adjust these names as per your database columns)
   const customColumns = [
     'id',
     'name',
@@ -77,13 +77,14 @@ const TableDisplay = ({ selectedTable }) => {
     'past projects'
   ];
 
-  // Fetch data for the selected table when it changes.
+  // REM: Fetch data for the selected table when it changes.
   useEffect(() => {
     const fetchData = async () => {
       setLoadingData(true);
       try {
+        // REM: Updated endpoint to use /api/table with a query parameter for the table name.
         const response = await fetch(
-          `${API_BASE_URL}/api/tables?name=${encodeURIComponent(selectedTable)}`
+          `${API_BASE_URL}/api/table?name=${encodeURIComponent(selectedTable)}`
         );
         if (!response.ok) {
           throw new Error('Failed to fetch data for the selected table');
