@@ -64,7 +64,6 @@ const TableDisplay = ({ selectedTable }) => {
 
   // REM: Define custom column order (adjust these names as per your database columns)
   const customColumns = [
-    'id',
     'Name',
     'DOB',
     'Phone Number',
