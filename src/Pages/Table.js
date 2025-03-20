@@ -65,16 +65,16 @@ const TableDisplay = ({ selectedTable }) => {
   // REM: Define custom column order (adjust these names as per your database columns)
   const customColumns = [
     'id',
-    'name',
-    'dob',
-    'Phone No',
-    'skills',
-    'doj',
-    'salary',
-    'attendance last year',
-    'projects completed',
-    'projects currently on',
-    'past projects'
+    'Name',
+    'DOB',
+    'Phone Number',
+    'Skills',
+    'DOJ',
+    'Salary',
+    'Attendance Last Year',
+    'Projects Completed',
+    'Projects Currently On',
+    'Past Projects'
   ];
 
   // REM: Fetch data for the selected table when it changes.
