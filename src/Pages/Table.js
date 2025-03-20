@@ -11,7 +11,7 @@ const TableManager = () => {
   useEffect(() => {
     const fetchTables = async () => {
       try {
-        const response = await .get('/api/table');
+        const response = await api.get('/api/table');
         if (!response.ok) {
           throw new Error('Failed to fetch table names');
         }
