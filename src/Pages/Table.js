@@ -79,28 +79,29 @@ const TableDisplay = ({ selectedTable }) => {
 
   // REM: Fetch data for the selected table when it changes.
   useEffect(() => {
-    const fetchData = async () => {
-      setLoadingData(true);
-      try {
-        // REM: Updated endpoint to use /api/table with a query parameter for the table name.
-        const response = await fetch(
-          `${API_BASE_URL}/api/table?name=${encodeURIComponent(selectedTable)}`
-        );
-        if (!response.ok) {
-          throw new Error('Failed to fetch data for the selected table');
-        }
-        const result = await response.json();
-        setData(result.data);
-        setTableName(result.table_name);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoadingData(false);
+  const fetchData = async () => {
+    setLoadingData(true);
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/table?name=${encodeURIComponent(selectedTable)}`
+      );
+      if (!response.ok) {
+        throw new Error('Failed to fetch data for the selected table');
       }
-    };
+      const result = await response.json();
+      console.log("API result:", result); // Debug log
+      setData(result.data);
+      setTableName(result.table_name);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoadingData(false);
+    }
+  };
 
-    fetchData();
-  }, [selectedTable]);
+  fetchData();
+}, [selectedTable]);
+
 
   if (error) return <div className="text-red-500">Error: {error}</div>;
   if (loadingData) return <div className="text-blue-500">Loading data...</div>;
